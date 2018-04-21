@@ -51,7 +51,7 @@ void tokenize_commands(char *command_string) {
     // printf("%s\n", command_string);
     // printf("%s\n", copy_str);
 
-    strncpy(command_string, copy_str, strlen(copy_str));
+    strncpy(command_string, copy_str, strlen(copy_str) + 1);
 
     /* The string that we have now is only a string, so we want to iterate
        through it and tokenize it into the array of command structs including
@@ -74,12 +74,12 @@ void tokenize_commands(char *command_string) {
                 if(strcmp(toktok, "<") == 0) { //Found input redirection in curr command
                     commands[j].redirIn = 1; //Set input redirection flag to true
                     toktok = strtok_r(str2, " ", &p2); //Next token should be infile
-                    strncpy(commands[j].inFile, toktok, strlen(toktok));
+                    strncpy(commands[j].inFile, toktok, strlen(toktok) + 1);
                 }
                 else if(strcmp(toktok, ">") == 0) {
                     commands[j].redirOut = 1;
                     toktok = strtok_r(str2, " ", &p2);
-                    strncpy(commands[j].outFile, toktok, strlen(toktok));
+                    strncpy(commands[j].outFile, toktok, strlen(toktok) + 1);
                 }
                 else {
                     commands[j].tokens[k++] = toktok;

@@ -75,13 +75,13 @@ void tokenize_commands(char *command_string) {
                     commands[j].redirIn = 1; //Set input redirection flag to true
                     str2 = NULL; //strtok_r expects NULL for str2 after first call
                     toktok = strtok_r(str2, " ", &p2); //Next token should be infile
-                    strncpy(commands[j].inFile, toktok, strlen(toktok));
+                    strncpy(commands[j].inFile, toktok, strlen(toktok) + 1);
                 }
                 else if(strcmp(toktok, ">") == 0) {
                     commands[j].redirOut = 1;
                     str2 = NULL;
                     toktok = strtok_r(str2, " ", &p2);
-                    strncpy(commands[j].outFile, toktok, strlen(toktok));
+                    strncpy(commands[j].outFile, toktok, strlen(toktok) + 1);
                 }
                 else {
                     commands[j].tokens[k++] = toktok;

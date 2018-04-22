@@ -5,6 +5,8 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+char *cwd;
+
 int main(int argc, char **argv) {
     if(argc < 3) {
         fprintf(stderr, "Usage: %s [-r|-R] <source> <destination>\n", argv[0]);

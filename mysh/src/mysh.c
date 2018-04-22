@@ -47,6 +47,7 @@ void tokenize_commands(char *command_string) {
         }
     }
     copy_str[k++] = '\0';
+    trim(copy_str);
     /* DEBUG: Write original command_string array and new copy_string to stdout */
     // printf("%s\n", command_string);
     // printf("%s\n", copy_str);
@@ -70,16 +71,17 @@ void tokenize_commands(char *command_string) {
         }
         for(str2 = tok; ; str2 = NULL) {
             if((toktok = strtok_r(str2, " ", &p2)) != NULL) {
-                //This breaks if redirection is put at the very beginning of command
                 if(strcmp(toktok, "<") == 0) { //Found input redirection in curr command
                     commands[j].redirIn = 1; //Set input redirection flag to true
+                    str2 = NULL; //strtok_r expects NULL for str2 after first call
                     toktok = strtok_r(str2, " ", &p2); //Next token should be infile
-                    strncpy(commands[j].inFile, toktok, strlen(toktok) + 1);
+                    strncpy(commands[j].inFile, toktok, strlen(toktok));
                 }
                 else if(strcmp(toktok, ">") == 0) {
                     commands[j].redirOut = 1;
+                    str2 = NULL;
                     toktok = strtok_r(str2, " ", &p2);
-                    strncpy(commands[j].outFile, toktok, strlen(toktok) + 1);
+                    strncpy(commands[j].outFile, toktok, strlen(toktok));
                 }
                 else {
                     commands[j].tokens[k++] = toktok;
@@ -98,13 +100,16 @@ void tokenize_commands(char *command_string) {
 void exec_commands() {
     //Iterate through commands doing redirection and piping as necessary
     if(num_commands == 1) {
-        if(strcmp(commands[0].tokens[0], "mypwd") == 0) {
+        if(strcmp(commands[0].tokens[0], "mypwd") == 0 ||
+          strcmp(commands[0].tokens[0], "pwd") == 0) {
             mypwd();
             return;
         }
-        else if(commands[0].tokens[0] == "mycd") {
-            //call mycd and give it the command to execute
-            //mycd(commands[0]);
+        else if(strcmp(commands[0].tokens[0], "mycd") == 0 ||
+                strcmp(commands[0].tokens[0], "cd") == 0) {
+            //Call mycd for cd as well because I keep accidnetally typing cd instead of mycd
+            mycd(commands[0].tokens);
+            return;
         }
     }
     //Here we can begin to iterate through commands and set up pipes/execute them
@@ -123,9 +128,12 @@ void exec_commands() {
                 infd = open(commands[i].inFile, O_RDONLY);
                 if(infd < 0) {
                     perror("Error opening infile.");
+                    exit(1);
                 }
-                dup2(infd, STDIN_FD);
-                close(infd);
+                else {
+                    dup2(infd, STDIN_FD);
+                    close(infd);
+                }
             }
             if(num_commands > 1) {
                 if(i == 0) { //first pipe
@@ -152,9 +160,12 @@ void exec_commands() {
                                                   S_IRUSR | S_IWUSR);
                 if(outfd < 0) {
                     perror("Error creating/opening outfile");
+                    exit(1);
                 }
-                dup2(outfd, STDOUT_FD);
-                close(outfd);
+                else {
+                    dup2(outfd, STDOUT_FD);
+                    close(outfd);
+                }
             }
             if(execvp(commands[i].tokens[0], commands[i].tokens) < 0) {
                 fprintf(stderr, "Error execing command %s\n", commands[i].tokens[0]);

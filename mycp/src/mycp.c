@@ -3,9 +3,24 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <ftw.h>
 #include <dirent.h>
 
-char *cwd;
+static int do_recursive_copy(const char *file_path, 
+                             const struct stat *st_buf, 
+                             int type_flags,
+                             struct FTW *ftw_buf) 
+{
+    if(type_flags == FTW_NS) {
+        fprintf(stderr, "Error reading file at %s: Permission denied.\n", file_path);
+    }
+    else if(type_flags == FTW_D) {
+        printf("Found directory at %s\n", file_path);
+    }
+    else if(type_flags == FTW_F) {
+        printf("Found regular file at %s\n", file_path);
+    }
+}
 
 int main(int argc, char **argv) {
     if(argc < 3) {
@@ -29,6 +44,14 @@ int main(int argc, char **argv) {
     }
     argsind = optind;
 
+    /* We will have several cases we need to cover:
+        * Copy a source file to a dest file, open dest file with O_TRUNC
+        * Copy a source file to a dest dir
+        * Copy a source dir to a dest dir recursively and only recursively, produce error if no -r flag
+           * We need to be sure to make the source directory and all the files/directories inside it in the dest dir,
+             not just copy all the files/directories inside the source dir
+        * Produce error on attempt to copy dir to file
+    */
     if(RECUR_CP) {
         printf("Directories will be copied recursively.\n");
     }
@@ -46,7 +69,11 @@ int main(int argc, char **argv) {
 
     //Test source to determine if file or directory
     if(s_mode == S_IFDIR) {
+        int ret;
+        int flags = FTW_PHYS | FTW_MOUNT;
+        int fd_limit = 5;
         printf("Source is a directory.\n");
+        ret = nftw(argv[argsind], do_recursive_copy, fd_limit, flags);
     }
     else if(s_mode == S_IFREG) {
         printf("Source is a regular file.\n");

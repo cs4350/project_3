@@ -39,8 +39,6 @@ int main(int argc, char *argv[])
     return(0);
  }
 
- printf("\n");
-
  //for-loop for iterating through i amount of
  //files since cat can handle more than one file
  for(i = 1; i < argc; i++)
@@ -71,8 +69,6 @@ int main(int argc, char *argv[])
     while((ch = fgetc(fp)) != EOF){
          printf("%c",ch);
     }
-
-    printf("\n");
   
     //close file
     fclose(fp); 

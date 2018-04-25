@@ -5,6 +5,25 @@ char *cwd;
 char PROMPT[MAX_SIZE];
 int num_commands;
 
+void append_to_path(char *append_path) {
+    char *path = getenv("PATH");
+    char* optpath = path;
+    while (optpath = strstr(optpath, append_path)) {
+        if (*(optpath-1) == '=' || *(optpath-1) == ':') {
+            if (*(optpath+strlen(append_path)) == 0 || *(optpath+strlen(append_path)) == ':') {
+                return;
+            }
+        }
+        optpath += strlen(append_path);
+    }
+    char* newpath = (char*)malloc((strlen("PATH=") + strlen(path) + strlen(append_path) + 2) * sizeof(char));
+    strncpy(newpath, "PATH=", strlen("PATH="));
+    strncat(newpath, path, strlen(path));
+    strncat(newpath, ":", 1);
+    strncat(newpath, append_path, strlen(append_path));
+    putenv(newpath);
+}
+
 void setup_shell() {
     //do some stuff to set up the shell
     //allocate cwd
@@ -12,6 +31,9 @@ void setup_shell() {
     if(getcwd(cwd, PATH_MAX) == NULL) {
         perror("Error with getcwd");
     }  
+    //Append cwd to end of PATH so we can use our executables without ./
+    append_to_path(cwd);
+    //Set up prompt
     strcpy(PROMPT, "mysh:");
     strcat(PROMPT, cwd);
     strncat(PROMPT, "> ", 2);

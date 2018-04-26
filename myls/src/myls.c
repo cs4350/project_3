@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
         int j = 0;
         while((dp = readdir(dir)) != NULL) {
             file_name = dp->d_name;
-            if(strcmp(file_name, ".") != 0 && strcmp(file_name, "..") != 0) { //Demorgan's law strikes again
+            if(file_name[0] != '.') { //Demorgan's law strikes again
                 in_args[j] = malloc((strlen(file_name) + 1) * sizeof(char));
                 strncpy(in_args[j], file_name, strlen(file_name) + 1);
                 j++;
@@ -177,7 +177,7 @@ void stat_ls_dir(char* dirs){
         int j = 0;
         while((dp = readdir(dir)) != NULL) {
             file_name = dp->d_name;
-            if(strcmp(file_name, ".") != 0 && strcmp(file_name, "..") != 0) { //Demorgan's law strikes again
+            if(file_name[0]!= '.') { //Demorgan's law strikes again
                 in_args[j] = malloc((strlen(file_name) + 1) * sizeof(char));
                 strncpy(in_args[j], file_name, strlen(file_name) + 1);
                 j++;

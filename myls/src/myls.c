@@ -9,6 +9,7 @@
 #include <grp.h>
 #include <time.h>
 #include <limits.h>
+#include <strings.h>
 
 #define MAX_SIZE 256
 
@@ -231,9 +232,7 @@ void stat_ls_dir(char* dirs){
 
 int comp (const void * elem1, const void * elem2) 
 {
-    char f = *((char*)elem1); 
-    char s = *((char*)elem2);
-    if (f < s) return  1;
-    if (f > s) return -1;
-    return 0;
+    char* f = tolower(*(char**)elem1); 
+    char* s = tolower(*(char**)elem2);
+    return strcasecmp(f,s);
 }

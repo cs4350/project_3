@@ -15,6 +15,9 @@ void mycd(const char **argv) {
   //   return;
   // }
   //Only use the first argument
+  if(argv[1] == NULL) {
+    return;
+  }
   char *cdir = argv[1];
   if(strcmp(cdir, "~") == 0) {
     cdir = getenv("HOME");
@@ -33,12 +36,12 @@ void mycd(const char **argv) {
   }
 }
 
-void trim(char * s) {
-    char * p = s;
+void trim(char *s) {
+    char *p = s;
     int l = strlen(p);
 
     while(isspace(p[l - 1])) p[--l] = 0;
-    while(* p && isspace(* p)) ++p, --l;
+    while(*p && isspace(*p)) ++p, --l;
 
     memmove(s, p, l + 1);
 }   

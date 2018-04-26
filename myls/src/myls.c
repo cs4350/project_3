@@ -130,8 +130,8 @@ int main(int argc, char **argv) {
                 permissions[2] = (buf.st_mode & S_IWUSR) ? 'w' : '-';
                 permissions[3] = (buf.st_mode & S_IXUSR) ? 'x' : '-';
                 permissions[4] = (buf.st_mode & S_IRGRP) ? 'r' : '-';
-                permissions[5] = (buf.st_mode & S_IWUSR) ? 'w' : '-';
-                permissions[6] = (buf.st_mode & S_IXUSR) ? 'x' : '-';
+                permissions[5] = (buf.st_mode & S_IWGRP) ? 'w' : '-';
+                permissions[6] = (buf.st_mode & S_IXGRP) ? 'x' : '-';
                 permissions[7] = (buf.st_mode & S_IROTH) ? 'r' : '-';
                 permissions[8] = (buf.st_mode & S_IWOTH) ? 'w' : '-';
                 permissions[9] = (buf.st_mode & S_IXOTH) ? 'x' : '-';
@@ -193,8 +193,8 @@ void stat_ls_dir(char* dirs){
                 permissions[2] = (buf.st_mode & S_IWUSR) ? 'w' : '-';
                 permissions[3] = (buf.st_mode & S_IXUSR) ? 'x' : '-';
                 permissions[4] = (buf.st_mode & S_IRGRP) ? 'r' : '-';
-                permissions[5] = (buf.st_mode & S_IWUSR) ? 'w' : '-';
-                permissions[6] = (buf.st_mode & S_IXUSR) ? 'x' : '-';
+                permissions[5] = (buf.st_mode & S_IWGRP) ? 'w' : '-';
+                permissions[6] = (buf.st_mode & S_IXGRP) ? 'x' : '-';
                 permissions[7] = (buf.st_mode & S_IROTH) ? 'r' : '-';
                 permissions[8] = (buf.st_mode & S_IWOTH) ? 'w' : '-';
                 permissions[9] = (buf.st_mode & S_IXOTH) ? 'x' : '-';

@@ -97,12 +97,22 @@ void tokenize_commands(char *command_string) {
                     commands[j].redirIn = 1; //Set input redirection flag to true
                     str2 = NULL; //strtok_r expects NULL for str2 after first call
                     toktok = strtok_r(str2, " ", &p2); //Next token should be infile
+                    if(toktok == NULL) {
+                        fprintf(stderr, "mysh: Expected filename after <\n");
+                        num_commands = 0;
+                        return;
+                    }
                     strncpy(commands[j].inFile, toktok, strlen(toktok) + 1);
                 }
                 else if(strcmp(toktok, ">") == 0) {
                     commands[j].redirOut = 1;
                     str2 = NULL;
                     toktok = strtok_r(str2, " ", &p2);
+                    if(toktok == NULL) {
+                        fprintf(stderr, "mysh: Expected filename after >\n");
+                        num_commands = 0;
+                        return;
+                    }
                     strncpy(commands[j].outFile, toktok, strlen(toktok) + 1);
                 }
                 else {
@@ -120,7 +130,18 @@ void tokenize_commands(char *command_string) {
 }
 
 void exec_commands() {
-    //Iterate through commands doing redirection and piping as necessary
+    if(num_commands == 0) {
+        return;
+    }
+    //Iterate through commands and check that they are valid
+    int k;
+    for(k = 0; k < num_commands; k++) {
+        if(commands[k].argc == 0) {
+            fprintf(stderr, "mysh: Error processing commands\n");
+            return;
+        }
+    }
+    //Check if builtin command
     if(num_commands == 1) {
         if(strcmp(commands[0].tokens[0], "mypwd") == 0 ||
           strcmp(commands[0].tokens[0], "pwd") == 0) {

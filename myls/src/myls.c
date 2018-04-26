@@ -54,7 +54,9 @@ int main(int argc, char **argv) {
            directories passed */
         int dir_count = 0;
         for(i = 0; i < j; i++){
-            stat(in_args[i],&buf);
+            if(stat(in_args[i],&buf) < 0){
+                perror("Couldn't stat file");
+            }
             if(S_ISDIR(buf.st_mode)){
                 DIR_FLAG = 1;
                 dirs[dir_count] = malloc((strlen(in_args[i]) + 1) *sizeof(char));
@@ -63,7 +65,6 @@ int main(int argc, char **argv) {
             }
             else {
                 if(L_FLAG){
-                    stat(in_args[i],&buf);
                     permissions[0] = (S_ISDIR(buf.st_mode) ? 'd' : '-');
                     permissions[1] = (buf.st_mode & S_IRUSR) ? 'r' : '-';
                     permissions[2] = (buf.st_mode & S_IWUSR) ? 'w' : '-';
@@ -124,7 +125,9 @@ int main(int argc, char **argv) {
         qsort (in_args, j, sizeof(char*), comp);
         if(L_FLAG){
             for(i = 0; i < j; i++){
-                stat(in_args[i],&buf);
+                if(stat(in_args[i],&buf) < 0){
+                    perror("Couldn't stat file");
+                }
                 permissions[0] = (S_ISDIR(buf.st_mode) ? 'd' : '-');
                 permissions[1] = (buf.st_mode & S_IRUSR) ? 'r' : '-';
                 permissions[2] = (buf.st_mode & S_IWUSR) ? 'w' : '-';

@@ -31,8 +31,9 @@ void mycd(const char **argv) {
         perror("Error with getcwd");
     }  
     strcpy(PROMPT, "mysh:");
-    strcat(PROMPT, cwd);
-    strncat(PROMPT, "> ", 2);
+    char *end = strrchr(cwd, '/') + 1; //Get current directory name
+    if(end && *end) strcat(PROMPT, end);
+    strncat(PROMPT, "$ ", 2);
   }
 }
 

@@ -35,8 +35,9 @@ void setup_shell() {
     append_to_path(cwd);
     //Set up prompt
     strcpy(PROMPT, "mysh:");
-    strcat(PROMPT, cwd);
-    strncat(PROMPT, "> ", 2);
+    char *end = strrchr(cwd, '/') + 1; //Get current directory name
+    if(end && *end) strcat(PROMPT, end);
+    strncat(PROMPT, "$ ", 2);
 }
 
 void tokenize_commands(char *command_string) {

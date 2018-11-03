@@ -236,11 +236,12 @@ int main(int argc, char **argv) {
         in_line[0] = 0;
         fgets(in_line, MAX_LN_SZ, stdin); //get line from input
         in_line[strlen(in_line) - 1] = '\0'; //Get rid of trailing newline
+        trim(in_line); //trim surrounding whitespace
         //Check to ensure line isn't blank and doesn't lead with spaces
-        if(in_line[0] == ' ') {
+        if(in_line[0] == '\0') {
             continue;
         }
-        if(strcmp(in_line, "exit") == 0) {
+        if(strcmp(in_line, "exit") == 0 || strcmp(in_line, "logout") == 0) {
             break;
         }
         tokenize_commands(in_line);
